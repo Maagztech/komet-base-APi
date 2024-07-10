@@ -4,31 +4,27 @@ const axios = require('axios');
 exports.reportLocation = async (req, res) => {
   const { latitude, longitude, partnerId } = req.body;
 
-  // Get city and country using reverse geocoding API
   const geoRes = await axios.get(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
   const { city, countryName: country } = geoRes.data;
 
-  // Check if the location entry already exists
   const [locationRows] = await pool.execute(
     'SELECT * FROM locations WHERE city = ? AND country = ? AND partner_id = ?',
     [city, country, partnerId]
   );
 
   if (locationRows.length > 0) {
-    // Update the existing location entry
+ 
     await pool.execute(
       'UPDATE locations SET live_users = live_users + 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
       [locationRows[0].id]
     );
   } else {
-    // Insert a new location entry
     await pool.execute(
       'INSERT INTO locations (city, country, partner_id, live_users) VALUES (?, ?, ?, 1)',
       [city, country, partnerId]
     );
   }
 
-  // Insert a user session
   await pool.execute(
     'INSERT INTO user_sessions (latitude, longitude, city, country, partner_id) VALUES (?, ?, ?, ?, ?)',
     [latitude, longitude, city, country, partnerId]
@@ -70,7 +66,6 @@ exports.getTopCountries = async (req, res) => {
   res.json(groupedData);
 };
 
-// API to get the user distribution in percentage for the top countries in the last 24 hours
 exports.getRecentData = async (req, res) => {
   const [totalUsers] = await pool.execute(
     `SELECT COUNT(*) as total 
