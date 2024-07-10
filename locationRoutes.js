@@ -1,11 +1,12 @@
 const express = require('express');
-const { reportLocation, getLocations, getTopCountries, getRecentData } = require('./controllers/locationController');
+const { reportLocation, getRealTimeLiveUserCount, getRealTimeUserDivision, get24HourUserCount, get24HourUserDivision, updateUserStatus } = require('./controllers/locationController');
 
 const router = express.Router();
 
 router.post('/', reportLocation);
-router.get('/', getLocations);
-router.get('/top-countries', getTopCountries);
-router.get('/recent-data', getRecentData);
-
+router.get('/real-time-live-user-count', getRealTimeLiveUserCount);
+router.get('/real-time-user-division', getRealTimeUserDivision);
+router.get('/24-hour-user-count', get24HourUserCount);
+router.get('/24-hour-user-division', get24HourUserDivision);
+router.post('/update-user-status', updateUserStatus);
 module.exports = router;

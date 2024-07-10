@@ -1,25 +1,24 @@
-CREATE DATABASE IF NOT EXISTS analytics_system;
-USE analytics_system;
+CREATE DATABASE IF NOT EXISTS komet_base;
+
+USE komet_base;
 
 CREATE TABLE IF NOT EXISTS locations (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  city VARCHAR(255),
-  country VARCHAR(255),
-  partner_id VARCHAR(255),
-  live_users INT DEFAULT 0,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  UNIQUE KEY unique_location (city, country, partner_id)
+    partner_id VARCHAR(255) NOT NULL,
+    country VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    latitude DECIMAL(9, 6) NOT NULL,
+    longitude DECIMAL(9, 6) NOT NULL,
+    live_users INT NOT NULL,
+    PRIMARY KEY (partner_id, country, city)
 );
 
 CREATE TABLE IF NOT EXISTS user_sessions (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  latitude DECIMAL(10, 8) NOT NULL,
-  longitude DECIMAL(11, 8) NOT NULL,
-  city VARCHAR(255),
-  country VARCHAR(255),
-  partner_id VARCHAR(255),
-  live BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    partner_id VARCHAR(255) NOT NULL,
+    country VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    latitude DECIMAL(9, 6) NOT NULL,
+    longitude DECIMAL(9, 6) NOT NULL,
+    live BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (partner_id, country, city, created_at)
 );
